@@ -40,7 +40,8 @@ component =
 
   eval :: Query ~> H.ComponentDSL State Query Void m
   eval (HandleInput value next) = do
-    H.put value
+    s <- H.get
+    H.put $ s <> value
     pure next
   eval (GetValue reply) = do
     reply <$> H.get

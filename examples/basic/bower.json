@@ -2,6 +2,8 @@
   "name": "basic",
   "private": true,
   "dependencies": {
-    "purescript-halogen": "*"
+    "purescript-halogen": "*",
+    "purescript-react-dom": "^4.0.0",
+    "purescript-strings": "^3.3.1"
   }
 }

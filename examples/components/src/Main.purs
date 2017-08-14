@@ -9,4 +9,5 @@ import Container as Container
 main :: Eff (HA.HalogenEffects ()) Unit
 main = HA.runHalogenAff do
   body <- HA.awaitBody
+  _ <- runUI Container.component unit body
   runUI Container.component unit body

@@ -49,15 +49,29 @@ component =
           , HH.button
               [ HE.onClick (HE.input_ CheckButtonState) ]
               [ HH.text "Check now" ]
+          , HH.text "hello"
           ]
+      , HH.text "hello again"
+      , HH.text "hello again"
+      , HH.text "hello again"
+      , HH.text "hello again"
+      , HH.text "hello again"
       ]
 
   eval :: Query ~> H.ParentDSL State Query Button.Query Slot Void m
-  eval = case _ of
-    HandleButton (Button.Toggled _) next -> do
-      H.modify (\st -> st { toggleCount = st.toggleCount + 1 })
-      pure next
-    CheckButtonState next -> do
-      buttonState <- H.query ButtonSlot $ H.request Button.IsOn
-      H.modify (_ { buttonState = buttonState })
-      pure next
+  eval (HandleButton (Button.Toggled _) next) = do
+    _ <- H.modify (\st -> st { toggleCount = st.toggleCount + 1 })
+    pure next
+  eval (CheckButtonState next) = do
+    buttonState <- H.query ButtonSlot $ H.request Button.IsOn
+    _ <- H.modify (_ { buttonState = buttonState })
+    pure next
+
+    -- HandleButton (Button.Toggled _) next -> do
+    --   H.modify (\st -> st { toggleCount = st.toggleCount + 1 })
+    --   pure next
+    -- CheckButtonState next -> do
+    --   buttonState <- H.query ButtonSlot $ H.request Button.IsOn
+    --   H.modify (_ { buttonState = buttonState })
+    --   pure next
+      

@@ -3,6 +3,7 @@ module Component (State, Query(..), ui) where
 import Prelude
 import Control.Monad.Aff (Aff)
 import Control.Monad.Eff.Random (RANDOM, random)
+import Control.Monad.Eff.Console (CONSOLE, log, logShow)
 import Data.Maybe (Maybe(..), maybe)
 import Halogen as H
 import Halogen.HTML as HH
@@ -12,7 +13,7 @@ type State = Maybe Number
 
 data Query a = Regenerate a
 
-ui :: forall eff. H.Component HH.HTML Query Unit Void (Aff (random :: RANDOM | eff))
+ui :: forall eff. H.Component HH.HTML Query Unit Void (Aff (random :: RANDOM, console :: CONSOLE | eff))
 ui =
   H.component
     { initialState: const initialState
@@ -38,9 +39,10 @@ ui =
             [ HH.text "Generate new number" ]
         ]
 
-  eval :: Query ~> H.ComponentDSL State Query Void (Aff (random :: RANDOM | eff))
+  eval :: Query ~> H.ComponentDSL State Query Void (Aff (random :: RANDOM, console :: CONSOLE | eff))
   eval = case _ of
     Regenerate next -> do
       newNumber <- H.liftEff random
+      _ <- H.liftEff $ logShow "hello"
       H.put (Just newNumber)
       pure next
