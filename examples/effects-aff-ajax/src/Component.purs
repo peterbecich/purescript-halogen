@@ -56,7 +56,7 @@ ui =
           [ HH.text (if st.loading then "Working..." else "") ]
       , HH.div_
           case st.result of
-            Nothing -> []
+            Nothing -> [HH.text "Nothing yet!"]
             Just res ->
               [ HH.h2_
                   [ HH.text "Response:" ]

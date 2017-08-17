@@ -40,13 +40,12 @@ myButton =
         [ HH.text label ]
 
   eval :: Query ~> H.ComponentDSL State Query Message m
-  eval = case _ of
-    Toggle next -> do
+  eval (Toggle next) = do
       state <- H.get
       let nextState = not state
       H.put nextState
       H.raise $ Toggled nextState
       pure next
-    IsOn reply -> do
+  eval (IsOn reply) = do
       state <- H.get
       pure (reply state)
