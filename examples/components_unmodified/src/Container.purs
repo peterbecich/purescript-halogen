@@ -2,8 +2,6 @@ module Container where
 
 import Prelude
 import Data.Maybe (Maybe(..), maybe)
-import Control.Monad.Aff (Aff)
-import Control.Monad.Eff.Console (CONSOLE, error, logShow)
 import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
@@ -22,7 +20,7 @@ data Slot = ButtonSlot
 derive instance eqButtonSlot :: Eq Slot
 derive instance ordButtonSlot :: Ord Slot
 
-component :: forall m. H.Component HH.HTML Query Unit Void (Aff (console :: CONSOLE | m))
+component :: forall m. H.Component HH.HTML Query Unit Void m
 component =
   H.parentComponent
     { initialState: const initialState
@@ -37,7 +35,7 @@ component =
     { toggleCount: 0
     , buttonState: Nothing }
 
-  render :: State -> H.ParentHTML Query Button.Query Slot (Aff (console :: CONSOLE | m))
+  render :: State -> H.ParentHTML Query Button.Query Slot m
   render state =
     HH.div_
       [ HH.slot ButtonSlot Button.myButton unit (HE.input HandleButton)
@@ -54,11 +52,10 @@ component =
           ]
       ]
 
-  eval :: Query ~> H.ParentDSL State Query Button.Query Slot Void (Aff (console :: CONSOLE | m))
+  eval :: Query ~> H.ParentDSL State Query Button.Query Slot Void m
   eval = case _ of
     HandleButton (Button.Toggled _) next -> do
       H.modify (\st -> st { toggleCount = st.toggleCount + 1 })
-      _ <- H.liftEff $ logShow "button toggled"
       pure next
     CheckButtonState next -> do
       buttonState <- H.query ButtonSlot $ H.request Button.IsOn
